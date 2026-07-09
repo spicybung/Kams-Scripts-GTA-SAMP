@@ -60,6 +60,10 @@ fn SetINI key value_= (
 			if value_ == true then (setINISetting (scriptsPath + "GTA_Tools(GF)\settings.ini") "UI_AutoSet" "Exp_SkipCol" "1" )
 			else if value_ == false then (setINISetting (scriptsPath + "GTA_Tools(GF)\settings.ini") "UI_AutoSet" "Exp_SkipCol" "0" )
 		)
+		if  key == "Exp_ColPlugin" then (
+			if value_ == "NORMAL" then (setINISetting (scriptsPath + "GTA_Tools(GF)\settings.ini") "UI_AutoSet" "Exp_ColPlugin" "NORMAL" )
+			else if value_ == "SAMP" then (setINISetting (scriptsPath + "GTA_Tools(GF)\settings.ini") "UI_AutoSet" "Exp_ColPlugin" "SAMP" )
+		)
 
 	) catch (format "error autoSet % %\n" key value_)
 )
@@ -116,6 +120,7 @@ if DFFoutInfo() != 777 then messagebox "Script files do not correspond to the or
 
 Global Dummysize = 0.1		--control the dummy size, change it before pressing the Import Button 
 Global SAColBase = undefined
+Global KamsCollisionPluginID = 0x0253F2FA
 Global bonechain = #()
 global gfname
 
@@ -434,6 +439,8 @@ rollout DFFexPara "Export DFF" (
 		group "SA Collision" (
 			checkbox Vparts "Vehicle Parts" align:#left across:2
 			button colbase "Sel COL" width:65 offset:[0,-4] tooltip:"Select collision file"
+			checkbutton colNormal "Normal" width:65 highlightcolor:(color 0 189 0) checked:true across:2 tooltip:"Write normal GTA SA embedded collision plugin 0x0253F2FA"
+			checkbutton colSamp "SA-MP" width:65 highlightcolor:(color 0 189 0) tooltip:"Write SA-MP embedded collision plugin 0x0253F2FF"
 		) 
 		group "Export" (
 			
@@ -460,6 +467,22 @@ rollout DFFexPara "Export DFF" (
 		on noCOL changed state do (
 			if state == true then SetINI "Exp_SkipCol" true
 			else SetINI "Exp_SkipCol" false
+		)
+
+		on colNormal changed state do (
+			if state == true then (
+				colSamp.checked = false
+				KamsCollisionPluginID = 0x0253F2FA
+				SetINI "Exp_ColPlugin" "NORMAL"
+			) else colNormal.checked = true
+		)
+
+		on colSamp changed state do (
+			if state == true then (
+				colNormal.checked = false
+				KamsCollisionPluginID = 0x0253F2FF
+				SetINI "Exp_ColPlugin" "SAMP"
+			) else colSamp.checked = true
 		)
 		
 		/*
@@ -536,7 +559,20 @@ rollout DFFexPara "Export DFF" (
 						if (res as integer) == 0 then noCOL.checked = false
 						else if (res as integer) == 1 then noCOL.checked = true
 					)
-					res = (getINISetting (scriptsPath + "GTA_Tools(GF)\settings.ini") "UI_AutoSet" "Exp_VER")
+					res = (getINISetting (scriptsPath + "GTA_Tools(GF)\settings.ini") "UI_AutoSet" "Exp_ColPlugin")
+				if (res as string) != undefined then (
+					if (res as string) == "SAMP" then (
+						colNormal.checked = false
+						colSamp.checked = true
+						KamsCollisionPluginID = 0x0253F2FF
+					) else (
+						colNormal.checked = true
+						colSamp.checked = false
+						KamsCollisionPluginID = 0x0253F2FA
+					)
+				)
+
+				res = (getINISetting (scriptsPath + "GTA_Tools(GF)\settings.ini") "UI_AutoSet" "Exp_VER")
 					if (res as string) != undefined then (
 						if (res as string) == "SA" then (
 							eSA.checked = true
@@ -1118,6 +1154,7 @@ fn checkObjL objArr = (
 							colcase = 0
 							if noCOL.checked == true then colcase = 1
 							if Vparts.checked == true then colcase = 2
+							if colSamp.checked == true then KamsCollisionPluginID = 0x0253F2FF else KamsCollisionPluginID = 0x0253F2FA
 								
 							if (eSA.checked==true)AND(SAColBase==undefined)AND(colcase== 0) then messagebox "You need to supply a Collosion model for SA Export!"
 							else (		

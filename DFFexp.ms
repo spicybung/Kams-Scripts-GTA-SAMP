@@ -139,6 +139,16 @@ fn detachBySmGr obj = (
 	)
 )
 
+
+-- Collision plugin selector added for normal GTA SA embedded collision vs SA-MP appended collision.
+global KamsCollisionPluginID
+if KamsCollisionPluginID == undefined do KamsCollisionPluginID = 0x0253F2FA
+
+fn getKamsCollisionPluginID = (
+	global KamsCollisionPluginID
+	if KamsCollisionPluginID == undefined then 0x0253F2FA else KamsCollisionPluginID
+)
+
 fn writeCOL3 dff f ver = (
 	cf = fopen dff "rb"
 	fseek cf 8 #seek_set
@@ -168,7 +178,7 @@ fn writeCOL3 dff f ver = (
 		fseek cf 16 #seek_cur
 	)
 
-	writeLong f 0X0253F2FF          --SA Appended COL
+	writeLong f (getKamsCollisionPluginID())          --Normal/SAMP embedded COL
 	writeLong f col3leng
 	writeLong f ver 
 	for i = 1 to col3leng do writeByte f (readByte cf)
@@ -183,7 +193,7 @@ fn writeCOLL col f ver = (
 	colleng = ftell cf
 	fseek cf 0 #seek_set
 
-	writeLong f 0X0253F2FF          --SA Appended COL
+	writeLong f (getKamsCollisionPluginID())          --Normal/SAMP embedded COL
 	writeLong f colleng
 	writeLong f ver     
 	for i = 1 to colleng do writeByte f (readByte cf)    
