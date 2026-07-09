@@ -1778,4 +1778,4 @@ fn update2dfx shp Roll2dfx = (
 fn MapIOInfo = (
 	format "\nMap IO Version 0.5b\n\nby Kam		 10Oct05\nkam.lai@ntlworld.com\n\n"
 	return 051010
-)ят
+)

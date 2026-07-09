@@ -2,8 +2,8 @@ if DFFinInfo == undefined then fileIn (scriptspath+"\\GTA_Tools(GF)\\CharDFFimp.
 else if DFFinInfo() < 051016 then fileIn (scriptspath+"\\GTA_Tools(GF)\\CharDFFimp.ms") quiet:true
 if DFFinInfo() < 051016 then messagebox "You didn't have the right import function to run this script!\nTry Install it again!" title:"Import Function Error"
 
-if IFPioInfo == undefined then fileIn (scriptspath+"\\GTA_Tools(GF)\\gtaIFPio_Fn.mse") quiet:true 
-else if IFPioInfo() != 051014 then fileIn (scriptspath+"\\GTA_Tools(GF)\\gtaIFPio_Fn.mse") quiet:true
+if IFPioInfo == undefined then fileIn (scriptspath+"\\GTA_Tools(GF)\\gtaIFPio_Fn.ms") quiet:true 
+else if IFPioInfo() != 051014 then fileIn (scriptspath+"\\GTA_Tools(GF)\\gtaIFPio_Fn.ms") quiet:true
 if IFPioInfo() != 051014 then messagebox "You didn't have the right IFP function to run this script!\nTry Install it again!" title:"SA IFP Function Error"
 
 AnimInfo = #()

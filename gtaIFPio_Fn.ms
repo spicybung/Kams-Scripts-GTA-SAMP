@@ -401,7 +401,8 @@ fn SyncTRKeys obj = (
 			kidx = getKeyIndex pc tm
 			pc.keys[kidx].OutTangentType = #linear
 			pc.keys[kidx].InTangentType = #linear
-		)
+		)
+
 	)--end for i	
 
 	--if bkpc != undefined then execute ( "obj.pos.controller = " + (bkpc as string) + "()" )
